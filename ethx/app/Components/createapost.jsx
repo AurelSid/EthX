@@ -7,24 +7,18 @@ import {
 import { ethers } from "ethers";
 import { useState, useEffect } from "react";
 import { requestAccount } from "../connectMetamask";
-
+import { MyContext } from "../Mycontext";
+import React, { useContext } from "react";
 const createapost = () => {
+  const { userConnected, setUserConnected } = useContext(MyContext);
 
   async function runCreatePost() {
     try {
-      const tx = await contract.connect(signer).createPost(
-        { inputValue },
-        {
-          gasLimit: 200000, // Specify the gas limit
-          gasPrice: ethers.utils.parseUnits("50", "gwei"), // Specify the gas price
-        }
-      );
-      const result = await contract.connect(signer).getSignerUsername();
+      const tx = await contract.connect(signer).createPost(inputValue );
 
-      await tx.wait(); // Wait for the transaction to be mined
+      await tx.wait(); 
       console.log("Transaction mined:", tx.hash);
-      console.log("User connected! Username:", { result });
-      setUserConnected(true);
+      console.log("Post Created:");
     } catch (error) {
       console.error("Error executing contract function:", error);
     }
@@ -32,25 +26,33 @@ const createapost = () => {
   const [inputValue, setInputValue] = useState("");
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
-    console.log(inputValue);
   };
 
   return (
     <div className="w-full h-30 p-5 rounded-xl text-blue-300 bg-slate-700">
-    <form className="p-5  bg-slate-600 rounded-lg">
-      <label>
-        <div className="m-2">Username:</div>
-        <input type="text" name="name" onChange={handleInputChange} />
-      </label>
-    </form>
-    <div className="flex m-auto justify-center items-center">
-      {" "}
-      <button className="p-2 bg-slate-800 rounded-lg m-3" onClick={runCreatePost}>
-        Signup
-      </button>
+      <form className="p-5  bg-slate-600 rounded-lg">
+        <label>
+          <div className="m-2">Post:</div>
+          <input
+            placeholder="Hi! What are you thinking about?"
+            type="text"
+            name="name"
+            onChange={handleInputChange}
+            className="h-8 w-80 p-3 rounded-lg"
+          />
+        </label>
+      </form>
+      <div className="flex m-auto justify-center items-center">
+        {" "}
+        <button
+          className="p-2 bg-slate-800 rounded-lg m-3"
+          onClick={runCreatePost}
+        >
+          Post!
+        </button>
+      </div>
     </div>
-  </div>
-  )
-}
+  );
+};
 
-export default createapost
+export default createapost;

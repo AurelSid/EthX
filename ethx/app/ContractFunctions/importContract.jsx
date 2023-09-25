@@ -8,7 +8,7 @@ const provider = new ethers.providers.Web3Provider(window.ethereum);
 
 const signer = provider.getSigner();
 
-const daiAddress = "0x3Fb0543E392157103cb5bfF02451Fa568426A141";
+const daiAddress = "0x2D1BAB5a50437Ff0160291fAaD09E85c92c664a8";
 
 const daiAbi = [
   {

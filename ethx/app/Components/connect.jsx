@@ -5,22 +5,18 @@ import {
   contract,
 } from "../ContractFunctions/importContract";
 import { ethers } from "ethers";
+import React, { useContext } from "react";
+import { MyContext } from "../Mycontext";
 import { useState, useEffect } from "react";
-import { requestAccount } from "../connectMetamask";
 
 const connect = () => {
+  const { userConnected, setUserConnected } = useContext(MyContext);
+
   async function runSignUp() {
     try {
-      const tx = await contract.connect(signer).signup(
-        { inputValue },
-        {
-          gasLimit: 200000, // Specify the gas limit
-          gasPrice: ethers.utils.parseUnits("50", "gwei"), // Specify the gas price
-        }
-      );
+      const tx = await contract.connect(signer).signup(inputValue);
+      await tx.wait();
       const result = await contract.connect(signer).getSignerUsername();
-
-      await tx.wait(); // Wait for the transaction to be mined
       console.log("Transaction mined:", tx.hash);
       console.log("User connected! Username:", { result });
       setUserConnected(true);
@@ -35,11 +31,17 @@ const connect = () => {
   };
 
   return (
-    <div className="w-full h-30 p-5 rounded-xl text-blue-300 bg-slate-700">
+    <div className="w-full h-30 p-5 rounded-xl text-blue-300 bg-slate-700 m-2">
       <form className="p-5  bg-slate-600 rounded-lg">
         <label>
           <div className="m-2">Username:</div>
-          <input type="text" name="name" onChange={handleInputChange} />
+          <input
+            type="text"
+            name="name"
+            onChange={handleInputChange}
+            className="rounded-md w-full h-8 p-3"
+            placeholder="Choose a username"
+          />
         </label>
       </form>
       <div className="flex m-auto justify-center items-center">
