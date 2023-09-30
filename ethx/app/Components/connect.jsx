@@ -32,20 +32,21 @@ const connect = () => {
 
   return (
     <div className="w-full h-30 p-5 rounded-xl text-blue-300 bg-slate-700 m-2">
-      <form className="p-5  bg-slate-600 rounded-lg">
-        <label>
-          <div className="m-2">Username:</div>
-          <input
-            type="text"
-            name="name"
-            onChange={handleInputChange}
-            className="rounded-md w-full h-8 p-3"
-            placeholder="Choose a username"
-          />
-        </label>
-      </form>
+      {!userConnected ? (
+        <form className="p-5 bg-slate-600 rounded-lg">
+          <label>
+            <div className="m-2">Username:</div>
+            <input
+              type="text"
+              name="name"
+              onChange={handleInputChange}
+              className="rounded-md w-full h-8 p-3"
+              placeholder="Choose a username"
+            />
+          </label>
+        </form>
+      ) : null}
       <div className="flex m-auto justify-center items-center">
-        {" "}
         <button className="p-2 bg-slate-800 rounded-lg m-3" onClick={runSignUp}>
           Signup
         </button>

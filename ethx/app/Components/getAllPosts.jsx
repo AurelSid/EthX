@@ -4,40 +4,61 @@ import {
   signer,
   contract,
 } from "../ContractFunctions/importContract";
-import { ethers } from "ethers";
-import React, { useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { AiFillHeart } from "react-icons/ai";
+import { FaShareSquare } from "react-icons/fa";
 import { MyContext } from "../Mycontext";
-import { useState, useEffect } from "react";
 
 const GetAllPosts = () => {
-
-    const [posts, setPosts] = useState([]);
+  const { postCreated, setpostCreated } = useContext(MyContext);
+  const [posts, setPosts] = useState([]);
 
   async function runGetAllPosts() {
     try {
-     
       const tx = await contract.connect(signer).getAllPosts();
-
-      console.log("Transaction mined:", tx.hash);
-      console.log(tx);
       setPosts(tx);
+
+      console.log(tx);
     } catch (error) {
       console.error("Error executing contract function:", error);
     }
   }
 
+  async function handleLikePost(postId, author) {
+    try {
+      await contract.connect(signer).likePost(postId, author);
+    } catch (error) {
+      alert("You like you own posts? Thats kind of lame :'(");
+      console.error("Error executing contract function:", error);
+    }
+  }
+
+  useEffect(() => {
+    runGetAllPosts();
+  }, [postCreated]);
+
   return (
     <div className="m-3">
-      <button
-        className="bg-slate-800 text-blue-300 p-3 text-xl rounded-md flex m-auto "
-        onClick={runGetAllPosts}
-      >
-        Get All Posts
-      </button>
-      <div></div>
       {posts.map((post, index) => (
-          <li key={index}>{post.text}</li>
-        ))}
+        <div key={index} className="w-full bg-slate-700 m-2 p-4 rounded-lg">
+          <h1 className="bg-white w-full rounded-ms p-3 text-blue-500">
+            {post.text}
+          </h1>
+          <div className="flex mt-3 text-blue-300">
+            <div
+              className="m-3 flex justify-center items-center"
+              onClick={() => handleLikePost(post.postid, post.author)}
+            >
+              <AiFillHeart />
+              {post.likes}
+            </div>
+            <div className="m-3 flex justify-center items-center">
+              <FaShareSquare />
+              {post.shares}
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };

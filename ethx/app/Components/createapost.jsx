@@ -4,23 +4,23 @@ import {
   signer,
   contract,
 } from "../ContractFunctions/importContract";
-import { ethers } from "ethers";
 import { useState, useEffect } from "react";
-import { requestAccount } from "../connectMetamask";
 import { MyContext } from "../Mycontext";
 import React, { useContext } from "react";
 const createapost = () => {
-  const { userConnected, setUserConnected } = useContext(MyContext);
+  const { postCreated, setpostCreated } = useContext(MyContext);
 
   async function runCreatePost() {
     try {
-      const tx = await contract.connect(signer).createPost(inputValue );
+      const tx = await contract.connect(signer).createPost(inputValue);
 
-      await tx.wait(); 
+      await tx.wait();
       console.log("Transaction mined:", tx.hash);
       console.log("Post Created:");
+      setpostCreated(!postCreated);
     } catch (error) {
       console.error("Error executing contract function:", error);
+      alert("Please Signup");
     }
   }
   const [inputValue, setInputValue] = useState("");
@@ -29,8 +29,8 @@ const createapost = () => {
   };
 
   return (
-    <div className="w-full h-30 p-5 rounded-xl text-blue-300 bg-slate-700">
-      <form className="p-5  bg-slate-600 rounded-lg">
+    <div className="w-full h-30 p-5 rounded-xl text-blue-300 bg-slate-700 m-2">
+      <form className="p-5  bg-slate-600 rounded-lg w-full">
         <label>
           <div className="m-2">Post:</div>
           <input
@@ -38,7 +38,7 @@ const createapost = () => {
             type="text"
             name="name"
             onChange={handleInputChange}
-            className="h-8 w-80 p-3 rounded-lg"
+            className="h-8 p-3 rounded-lg w-full"
           />
         </label>
       </form>
